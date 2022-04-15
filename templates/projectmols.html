@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+  <div class="d-flex flex-wrap">
+
+  <div class="card" style="width: {{infowidth}}%; margin: {{margin}}%">
+
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item p-2">
+        usage: Add "blocks?tag=Xe&flag=F,Y"
+      </li>
+      <li class="list-group-item p-2">
+        Option tag: Xe, Be, or BeXe, Ba
+      </li>
+      <li class="list-group-item p-2">
+        Option flag: F, Y, U, or N (can pick multiple)
+      </li>
+      <li class="list-group-item p-2">
+        Option perrow: number of cards per row.
+      </li>
+      <li class="list-group-item p-2">
+        Option elements: Elements required, "elements=Cl,N,^S" (^ exclude atom)
+      </li>
+      <li class="list-group-item p-2">
+          Option range: "range=0-1000" &#8594; show ids 0~999 (does not affect download)
+      </li>
+      <li class="list-group-item p-2">
+        Use checkbox to curate tmp list to download.
+      </li>
+
+      {# buttons #}
+      <li class="list-group-item p-0">
+        <div class='row px-0 py-2 m-0'>
+          <div class="col pr-1 pl-2">
+            <button class="btn btn-primary w-100" id="download-selected">Download</button>
+          </div>
+          <div class="col pr-2 pl-1">
+            <a href="/cards/project/{{project}}/new" class="btn btn-danger w-100">Add Block</a>
+          </div>
+        </div>
+      </li>
+
+
+    </ul>
+  </div>
+    
+    <script>
+    $('#download-selected').on('mouseup', function(){
+        var keys = $('.mol-select:checkbox:checked').map(function(){
+            return $(this).val();
+        }).get().join(',');
+        if (!keys.trim()) {
+            var downloadurl = '/cards/project/{{project}}/data.csv{{params}}';
+        } else {
+            var downloadurl = '/cards/project/{{project}}/data.csv?inchikeys=' + keys;
+        }
+        // console.log(downloadurl);
+        window.location.href = downloadurl;
+    });
+    </script>
+
+    {% csrf_token %}
+    {% for mol in molecules %}
+      {% include "projectcard.html" with mol=mol cardwidth=cardwidth margin=margin project=project %}
+    {% endfor %}
+
+  </div>
+{% endblock %}
+

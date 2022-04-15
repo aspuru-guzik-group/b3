@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+  <div class="d-flex flex-wrap">
+
+  <div class="card" style="width: 25%; margin: 1%">
+
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item p-0">
+        Projects:
+      </li>
+
+      {% csrf_token %}
+      {% for project in projects %}
+        <li class="list-group-item p-2">
+          <a href='/cards/project/{{project}}'>{{project}}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+    
+
+
+  </div>
+{% endblock %}
+
