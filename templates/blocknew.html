@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+
+<div class="w-50 mx-auto">
+  <form method="post" autocomplete="off" id="newblockform">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="{{form.smiles.id_for_label}}">Smiles</label>
+      {{form.smiles}}
+    </div>
+    <div class="form-text text-muted">
+        Please enter a valid smiles string. If the page get redirected back here,
+        there could be one of the following errors: wrong smiles, or the 
+        molecule does not have trusted vendors.
+        Successful addition of molecules will be redirected to the page to change
+        the flags.
+    </div>
+    <button id="addbtn" name="addbtn" class="btn btn-primary mr-3">Add Block</button>
+    {% if message != '' %}
+    <div class='d-inline text-danger'>{{message}}</div>
+    {% endif %}
+    <hr/>
+
+    <div class="form-group">
+      <label for="{{form.smiles_list.id_for_label}}">List of Smiles</label>
+      {{form.smiles_list}}
+    </div>
+    <div class="form-text text-muted">
+        In this textbox, please list individual smiles in a newline. Each will be
+        processed separately. No error message will be returned.
+    </div>
+    <button id="listbtn" name="listbtn" class="btn btn-primary mr-3">Add smiles list</button>
+    {% if list_message != '' %}
+    <div class='d-inline text-danger'>{{list_message}}</div>
+    {% endif %}
+    <hr/>
+
+    <div class="form-group">
+      <label for="{{form.cas_list.id_for_label}}">List of CAS</label>
+      {{form.cas_list}}
+    </div>
+    <div class="form-text text-muted">
+        In this textbox, please list individual CAS in a newline. Each will be
+        processed separately. No error message will be returned.
+    </div>
+    <button id="casbtn" name="casbtn" class="btn btn-primary mr-3">Add CAS list</button>
+    {% if cas_message != '' %}
+    <div class='d-inline text-danger'>{{cas_message}}</div>
+    {% endif %}
+
+
+    {{form.button_type}}
+  </form>
+</div>
+
+
+<script>
+    function add_spin(btn) {
+        $(btn).prop('disabled', true);
+        $(btn).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing ...');
+    }
+
+    $('#addbtn').on('click', function() {
+        add_spin(this);
+        $('#id_button_type').val('add');
+        $('#newblockform').submit();
+    });
+
+    $('#listbtn').on('click', function() {
+        add_spin(this);
+        $('#id_button_type').val('list');
+        $('#newblockform').submit();
+    });
+
+    $('#casbtn').on('click', function() {
+        add_spin(this);
+        $('#id_button_type').val('cas');
+        $('#newblockform').submit();
+    });
+</script>
+
+
+
+{% endblock %}

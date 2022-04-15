@@ -1,0 +1,88 @@
+{% load static %}
+
+
+<div class="card" style="width: {{ cardwidth }}%; margin: {{margin}}%">
+    
+    <a href="/cards/project/{{project}}?inchikey={{ mol.inchikey }}">
+        {{mol.imgsrc |safe}}
+    </a>
+
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item p-0">
+
+<div class="btn-group btn-group-toggle" data-toggle="buttons" id="{{mol.inchikey}}">
+  <label class="btn btn-sm btn-secondary {{mol.f}}">
+    <input type="radio" name="options" value="F"> F
+  </label>
+  <label class="btn btn-sm btn-secondary {{mol.y}}">
+    <input type="radio" name="options" value="Y"> Y
+  </label>
+  <label class="btn btn-sm btn-secondary {{mol.u}}">
+    <input type="radio" name="options" value="U"> U
+  </label>
+  <label class="btn btn-sm btn-secondary {{mol.n}}">
+    <input type="radio" name="options" value="N"> N
+  </label>
+</div>
+
+        <input type="checkbox" class="mol-select" data-toggle="toggle" value="{{mol.inchikey}}">
+
+        </li>
+
+
+        <li class="list-group-item p-0">
+          PubChem: 
+
+          {% if mol.smiles != '' %}
+            {% for pcurl in mol.pubchem %}
+              <a href="{{ pcurl.url }}" target="_blank">{{ pcurl.name }}</a>,
+            {% endfor %}
+          {% else %}
+            {% for pcurl in mol.pubchem %}
+              <a href="{{ pcurl.url }}" target="_blank">{{forloop.counter}}</a>,
+            {% endfor %}
+          {% endif %}
+        </li>
+
+        {% for price in mol.prices %}
+        <li class="list-group-item p-0">
+          {# {{ price.name }}: {{ price.price }} $/g{% if price.url != '' %}, <a href="{{ price.url }}" target="_blank">link</a> #}
+          {% if price.price != 'Nan' %}
+            {{ price.name }}: <a href="{{ price.url }}" target="_blank">{{ price.price }}</a> $/g
+          {% else %}
+            {{ price.name }}: {{ price.price }} $/g
+          {% endif %}
+        </li>
+        {% endfor %}
+
+        {% if mol.smiles != '' %}
+        <li class="list-group-item p-0">
+          SMILES: {{mol.smiles}}
+        </li>
+        <li class="list-group-item p-0">
+          InchiKey: {{mol.inchikey}}
+        </li>
+        {% endif %}
+
+
+
+    </ul>
+</div>
+
+<script>
+$('#{{mol.inchikey}} :input').change(function() {
+    $.ajax({
+        url: "{{project}}",
+        method: "POST",
+        data: {
+          inchikey: "{{mol.inchikey}}",
+          flag: $(this).val(),
+          csrfmiddlewaretoken: $("[name=csrfmiddlewaretoken]").val(),
+        },
+        datatype: "json"
+    });
+    // console.log($(this).val())
+});
+
+</script>
+
