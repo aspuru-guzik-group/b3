@@ -17,7 +17,10 @@ Website usage
 2. You should have an empty project, to create a new project, go to `localhost:7000/cards/project/<project name>`
 3. Follow website instruction to create new molecules.
 
+License
+=======
 
+Please see the included `LICENSE.md` for the MIT license.
 
 
 
